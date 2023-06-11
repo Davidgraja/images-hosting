@@ -22,13 +22,7 @@ const UsuarioSchema = new Schema({
     img : {
         type: String,
     },
-
-    rol : {
-        type: String,
-        required : true,
-        emun :['ADMIN_ROLE' , 'USER_ROLE']
-    },
-
+    
     estado : {
         type: Boolean,
         default : true

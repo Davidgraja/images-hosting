@@ -1,16 +1,4 @@
-const Role = require('../models/role');
 const Usuario = require('../models/usuario');
-
-const roleValidate =  async ( rol = '' ) => {
-        
-    const validateRol = await Role.findOne({rol});
-
-    if(!validateRol){
-        throw new Error(`El rol : ${ rol } no es permitido`)
-    }
-
-}
-
 const validateExistingEmail =  async ( correo = '' ) => {
 
     const validateEmail = await  Usuario.findOne({correo});
@@ -30,7 +18,6 @@ const validateExistingIdUser =  async ( id ) => {
 }
 
 module.exports = {
-    roleValidate,
     validateExistingEmail,
     validateExistingIdUser
 }

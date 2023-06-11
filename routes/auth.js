@@ -11,9 +11,9 @@ router.post('/login',[
     validarCampos
 ], login);
 
-router.post('/google',[
-    check('id_token' , 'El id Token de goggle es necesario').notEmpty(),
-    validarCampos
-], googleSingIn);
+//router.post('/google',[
+//    check('id_token' , 'El id Token de goggle es necesario').notEmpty(),
+//    validarCampos
+//], googleSingIn);
 
 module.exports = router;

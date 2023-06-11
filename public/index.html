@@ -7,69 +7,7 @@
     <title> Google Sing in </title>
 </head>
 <body>
-    <h1> Google Sing in  </h1>
-
-    <div id="g_id_onload"
-    data-client_id="999591961330-vb3o7ji5rqmeoegajjrhd5cfd7f7quun.apps.googleusercontent.com"
-    data-auto_prompt="false"
-    data-callback="handleCredentialResponse">
-    </div>
-
-    <div class="g_id_signin"
-        data-type="standard"
-        data-size="large"
-        data-theme="outline"
-        data-text="sign_in_with"
-        data-shape="rectangular"
-        data-logo_alignment="left">
-    </div>
-
-
-    <button id="googleLogout">
-        Sing-out
-    </button>
-
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
-
-    <script>
-
-        function handleCredentialResponse(response) {
-             // Goggle token  : ID_TOKEN
-
-            const body = { id_token : response.credential }
-
-            fetch('https://node-rest-server-production-f90f.up.railway.app/api/auth/google',{
-                method: 'POST',
-                mode :"cors",
-                headers : {
-                    'Content-Type' : 'application/json'
-                },
-                body : JSON.stringify( body )
-            })
-            .then( response => response.json() )
-            .then( resp => {
-                console.log(resp)
-                localStorage.setItem('correo' , resp.usuario.correo);
-            } )
-
-            .catch( console.warn )
-
-            // Button for make logout 
-            const buttonGoogle = document.getElementById('googleLogout');
-
-            buttonGoogle.onclick = () =>{
-                console.log(google.accounts.id)
-
-                google.accounts.id.disableAutoSelect();
-
-                google.accounts.id.revoke(localStorage.getItem('correo') , done => {
-                    localStorage.clear();
-                    location.reload();
-                })
-            }
-
-        }
-
-    </script>
+    <h1> Backend basico de hosting de imagenes </h1>
+      <p>  puedes leer la documentacion de este servicio en el siguiente enlace </p>
 </body>
 </html>
