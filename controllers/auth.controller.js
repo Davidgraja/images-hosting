@@ -14,14 +14,16 @@ const login = async (req = request , res = response) => {
         
         if( !usuario ){
             return res.status(400).json({
-                message : 'correo / passsword no son correctos - correo'
+                ok : false ,
+                message : 'correo / passsword no son correctos'
             });
         }
 
         //? Verificación si el usuario esta activo 
         if( !usuario.estado ){
             return res.status(400).json({
-                message : 'correo / passsword no son correctos - estado : false'
+                ok : false ,
+                message : 'correo / passsword no son correctos'
             });
         }
 
@@ -30,6 +32,7 @@ const login = async (req = request , res = response) => {
 
         if( !validatePassword ){
             return res.status(400).json({
+                ok : false,
                 message : 'correo / passsword no son correctos - password : false'
             });
         }
@@ -38,6 +41,7 @@ const login = async (req = request , res = response) => {
         const token = await generarJWT( usuario.id );
 
         res.json({
+            ok : true,
             usuario,
             token
         })
@@ -46,6 +50,7 @@ const login = async (req = request , res = response) => {
     } catch (error) {
         
         return res.status(500).json({
+            ok : false , 
             message : 'Por favor comuniquese con el administrador'
         });
 
