@@ -7,4 +7,4 @@ const router = Router();
 
 router.post('/' , uploadFiles)
 
-module.exports = router;1
+module.exports = router;
