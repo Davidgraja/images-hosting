@@ -3,6 +3,9 @@ const {uploadFile} = require("../helpers");
 
 const uploadFiles = async  ( req = request , res = response) => {
 
+        
+    const {_id : uid} = req.authenticatedUser;
+    
     if (!req.files || Object.keys(req.files).length === 0 || !req.files.file) {
         return res.status(400).json({
             ok : false ,
@@ -12,7 +15,7 @@ const uploadFiles = async  ( req = request , res = response) => {
       
     try {
 
-        const fileName = await uploadFile(req.files , undefined , 'images' );
+        const fileName = await uploadFile(req.files , undefined , uid.toString() ,'images' );
         res.json({
             ok : true,
             fileName
@@ -31,6 +34,18 @@ const uploadFiles = async  ( req = request , res = response) => {
    
 }
 
+//const updateImage = (req = request, res = response) => {
+//    
+//    const { id , collection } = req.params; 
+//
+//    res.json({
+//        id,
+//        collection
+//    })   
+//
+//}
+
 module.exports = {
-    uploadFiles
+    uploadFiles,
+//    updateImage
 }

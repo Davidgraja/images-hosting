@@ -32,6 +32,11 @@ const UsuarioSchema = new Schema({
         type: Boolean,
         default : false
     },
+
+    images : {
+        type : Array,
+        default : []
+    }
 })
 
 

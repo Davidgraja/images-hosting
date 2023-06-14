@@ -27,8 +27,8 @@ const usuariosGet = async (req = request, res = response ) => {
 const usuariosPut =  async (req = request, res = response ) => {
 
     const id = req.params.id;
-    const { _id ,password , google ,correo, nombre, ...informationUser } = req.body;
-    
+    const { _id , images , password , google ,correo, nombre,...informationUser } = req.body;
+  
     if( password ){
         if(password.trim().length < 6){
             return res.status(406).json({
