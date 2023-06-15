@@ -22,7 +22,7 @@ const uploadFile = (files , extensionsValidated = ['png' , 'jpg' , 'jpeg' , 'gif
                 return reject(err);
             }
                 
-            resolve( nameTemporary );
+            resolve( {nameTemporary  , uploadPath});
             
         });
     })
