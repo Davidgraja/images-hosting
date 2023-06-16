@@ -1,10 +1,28 @@
 const path = require('path');
 const fs = require('fs');
-
+    
 const { request , response} = require('express');
 const {uploadFile} = require('../helpers');
 
 const Usuario = require('../models/usuario')
+
+
+const getFiles = (req = request , res = response ) => {
+    const { fileName , folder} = req.params;
+    const {_id : uid} = req.authenticatedUser;
+    
+    const filePath = path.join( __dirname , '../uploads' , uid.toString() , folder , fileName  )
+
+    if( !fs.existsSync(filePath) ){
+        return res.json({
+            ok : false ,
+            message : 'El archivo no ha sido encontrado'
+        })
+    }
+
+    res.sendFile( filePath );
+}
+
 
 const uploadFiles = async  ( req = request , res = response) => {
 
@@ -74,6 +92,7 @@ const deleteImage =  async  (req = request, res = response) => {
 }
 
 module.exports = {
+    getFiles,
     uploadFiles,
     deleteImage
 }
