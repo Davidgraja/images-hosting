@@ -1,14 +1,22 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
 
-const { validarJWT , validarCampos } =  require('../middlewares');
+const { validarJWT , validarCampos , validarArchivos } =  require('../middlewares');
 
-const {usuariosGet , usuariosPut , usuariosPost , usuariosDelete} = require("../controllers/user.controller");
+const {usuariosGet , usuariosPut , usuariosPost , usuariosDelete , updatePhotoProfile , getPhotoProfile} = require("../controllers/user.controller");
 const { validateExistingEmail, validateExistingIdUser } = require('../helpers/db_validations');
 
 const router = Router();
 
 router.get('/' ,  usuariosGet  );
+
+
+router.get('/photo' , validarJWT , getPhotoProfile  );
+
+
+router.patch('/' , [
+    validarJWT ,
+] , updatePhotoProfile );
 
 
 router.put('/:id' ,[

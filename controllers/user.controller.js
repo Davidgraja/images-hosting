@@ -1,7 +1,11 @@
+const path = require('path');
+const fs = require('fs');
+
 const { response , request } = require('express');
 const bcrypt = require('bcryptjs');
 const Usuario = require('../models/usuario');
 const {generarJWT} = require("../helpers/generar_jwt");
+const {uploadFile} = require("../helpers/uploadFile");
 
 const usuariosGet = async (req = request, res = response ) => {
 
@@ -23,6 +27,25 @@ const usuariosGet = async (req = request, res = response ) => {
     })
 
 }
+
+const getPhotoProfile = async  (req = request , res = response ) => {
+
+    const {_id : uid} = req.authenticatedUser;
+
+    const usuario = await Usuario.findById(uid);
+    
+    const filePath = path.join( __dirname , '../uploads' , uid.toString() , 'profile', usuario.img );
+    if(!fs.existsSync(filePath)){
+        return res.status(404).json({
+            ok : false ,
+            message : 'imagen no encontrada'
+            
+        })
+    }
+
+    res.sendFile(filePath);
+}
+
 
 const usuariosPut =  async (req = request, res = response ) => {
 
@@ -105,12 +128,14 @@ const usuariosDelete = async (req = request, res = response ) => {
 
     const {id} = req.params;
     
-    //* Borrar fisicamente  
+    //* Borrar fisicamente de la base de datos   
      const usuario = await Usuario.findByIdAndDelete(id);
-
+        
     //* Forma recomendada , esto para mantener la integridad referencial en la base de datos
 //    const usuario = await Usuario.findByIdAndUpdate( id , { estado : false } , {new : true} );
-
+    
+    
+    //TODO : eliminar fisicamente del servidor    
     res.json({
         ok: true,
         message : "Usuario eliminado",    
@@ -119,10 +144,86 @@ const usuariosDelete = async (req = request, res = response ) => {
 
 }
 
+const updatePhotoProfile  = async ( req = request , res = response ) => {
+    const {_id : uid} = req.authenticatedUser;
 
+    const { remove = false } = req.query;
+
+    const usuario = await Usuario.findById(uid);
+
+    const filePath = path.join( __dirname , '../uploads' , uid.toString() , 'profile', usuario.img );
+
+    if(remove){
+
+        const folderPath = path.join( __dirname , '../uploads' , uid.toString() , 'profile' );
+        
+        try {
+        
+            fs.unlinkSync(filePath)
+            fs.rmdirSync(folderPath)
+        
+            usuario.img = '';
+            await usuario.save();
+            
+            return res.json({
+                ok : true ,
+                message : 'imagen actualizada'
+            })
+            
+        } catch (e) {
+          
+            console.log(e)
+            return res.status(404).json({
+                ok : false,
+                message : 'no ha sido posible eliminar el archivo'
+            })
+        }
+    }
+
+    
+
+    if (!req.files || Object.keys(req.files).length === 0 || !req.files.file) {
+        return res.status(400).json({
+            ok : false ,
+            message : 'No hay archivos que subir'
+        });
+    } 
+   
+    if( usuario.img){
+        
+        try {
+            fs.unlinkSync(filePath)
+            
+        }catch (e){
+            console.log(e);
+            
+            return res.status(404).json({
+                ok : false,
+                message : 'no ha sido posible eliminar el archivo'
+            })
+        }
+
+    }  
+    
+
+    const { nameTemporary } = await uploadFile(req.files , undefined , uid.toString() , 'profile' );
+    
+    usuario.img = nameTemporary;
+    usuario.save();
+
+    res.json({
+        ok : true,
+        message : 'imagen actualizada'
+    })
+}
+
+
+    
 module.exports = {
     usuariosGet,
+    getPhotoProfile,
     usuariosPut,
+    updatePhotoProfile,
     usuariosPost,
     usuariosDelete,
 }

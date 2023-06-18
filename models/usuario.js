@@ -21,6 +21,7 @@ const UsuarioSchema = new Schema({
 
     img : {
         type: String,
+        default : ''
     },
     
     estado : {

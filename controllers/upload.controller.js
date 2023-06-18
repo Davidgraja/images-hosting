@@ -12,12 +12,13 @@ const getFiles = (req = request , res = response ) => {
     const {_id : uid} = req.authenticatedUser;
     
     const filePath = path.join( __dirname , '../uploads' , uid.toString() , folder , fileName  )
-
+    
     if( !fs.existsSync(filePath) ){
         return res.json({
             ok : false ,
             message : 'El archivo no ha sido encontrado'
         })
+        
     }
 
     res.sendFile( filePath );
@@ -30,13 +31,6 @@ const uploadFiles = async  ( req = request , res = response) => {
     const {_id : uid} = req.authenticatedUser;
         
     const { folder = 'images' } = req.query;
-
-    if (!req.files || Object.keys(req.files).length === 0 || !req.files.file) {
-        return res.status(400).json({
-            ok : false ,
-            message : 'No hay archivos que subir'
-        });
-    } 
       
     try {
         const user = await Usuario.findById(uid);
@@ -70,12 +64,12 @@ const deleteImage =  async  (req = request, res = response) => {
     const user = await Usuario.findById(uid);
     
     const filePath  = path.join( __dirname , '../uploads' , uid.toString(), folder , fileName )
-
+    
     if( !fs.existsSync( filePath ) ){
         return res.json({
             ok : false ,
             menssage : 'El archivo no ha sido encontrado'
-        })   
+        })
     }
     
     fs.unlinkSync( filePath );
