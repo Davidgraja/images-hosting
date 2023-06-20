@@ -1,11 +1,11 @@
 const path = require('path');
 const fs = require('fs');
-    
+
 const { request , response} = require('express');
-const {uploadFile} = require('../helpers');
 
 const Usuario = require('../models/usuario')
 
+const {uploadFile} = require('../helpers');
 
 const getFiles = (req = request , res = response ) => {
     const { fileName , folder} = req.params;
@@ -14,7 +14,7 @@ const getFiles = (req = request , res = response ) => {
     const filePath = path.join( __dirname , '../uploads' , uid.toString() , folder , fileName  )
     
     if( !fs.existsSync(filePath) ){
-        return res.json({
+        return res.status(404).json({
             ok : false ,
             message : 'El archivo no ha sido encontrado'
         })
@@ -31,7 +31,15 @@ const uploadFiles = async  ( req = request , res = response) => {
     const {_id : uid} = req.authenticatedUser;
         
     const { folder = 'images' } = req.query;
-      
+    
+    if(folder === 'profile' || folder === 'perfil'){
+        return res.status(400).json({
+            ok : false ,
+            message : 'Nombre no permitido , porfavor intente con otro nombre'
+        })
+        
+    }
+
     try {
         const user = await Usuario.findById(uid);
 
@@ -40,7 +48,7 @@ const uploadFiles = async  ( req = request , res = response) => {
 
         await user.save()
 
-         res.json({
+        res.json({
             ok : true,
             filename : nameTemporary
         })
@@ -51,7 +59,6 @@ const uploadFiles = async  ( req = request , res = response) => {
             message 
         })
     }
-   
 }
 
 
@@ -66,7 +73,7 @@ const deleteImage =  async  (req = request, res = response) => {
     const filePath  = path.join( __dirname , '../uploads' , uid.toString(), folder , fileName )
     
     if( !fs.existsSync( filePath ) ){
-        return res.json({
+        return res.status(404).json({
             ok : false ,
             menssage : 'El archivo no ha sido encontrado'
         })

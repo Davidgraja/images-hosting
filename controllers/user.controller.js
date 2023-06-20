@@ -1,9 +1,12 @@
 const path = require('path');
 const fs = require('fs');
 
-const { response , request } = require('express');
+const { rimraf } = require('rimraf')
 const bcrypt = require('bcryptjs');
+const { response , request } = require('express');
+
 const Usuario = require('../models/usuario');
+
 const {generarJWT} = require("../helpers/generar_jwt");
 const {uploadFile} = require("../helpers/uploadFile");
 
@@ -49,9 +52,10 @@ const getPhotoProfile = async  (req = request , res = response ) => {
 
 const usuariosPut =  async (req = request, res = response ) => {
 
-    const id = req.params.id;
-    const { _id , images , password , google ,correo, nombre,...informationUser } = req.body;
-  
+    const {_id : uid} = req.authenticatedUser;
+
+    const { _id , images , img,  password , google ,correo, nombre, estado ,...informationUser } = req.body;
+
     if( password ){
         if(password.trim().length < 6){
             return res.status(406).json({
@@ -67,12 +71,21 @@ const usuariosPut =  async (req = request, res = response ) => {
 
     if( nombre ){
 
+        if(typeof (nombre) !== 'string'){
+            return res.status(400).json({
+                ok : false ,
+                message : 'el nombre tiene que ser una cadena de texto'
+            })
+        }
+
         if(nombre.trim().length < 4){
             return res.status(406).json({
                 ok : false ,
                 message : 'el nombre debe de tener como minimo 4 caracteres'
             })
         }
+
+        
 
         informationUser.nombre = nombre
 
@@ -89,7 +102,7 @@ const usuariosPut =  async (req = request, res = response ) => {
         informationUser.correo = correo
     }
 
-    const usuario = await Usuario.findByIdAndUpdate(id , informationUser ,{new:true});
+    const usuario = await Usuario.findByIdAndUpdate(uid , informationUser ,{new:true});
 
     res.json({
         "message" : "Usuario actualizado",
@@ -126,21 +139,34 @@ const usuariosPost = async (req = request, res = response ) => {
 
 const usuariosDelete = async (req = request, res = response ) => {
 
-    const {id} = req.params;
+    const {_id : uid} = req.authenticatedUser;
+
+    const folderPath =  path.join( __dirname , '../uploads' , uid.toString() );
     
-    //* Borrar fisicamente de la base de datos   
-     const usuario = await Usuario.findByIdAndDelete(id);
+    try{
         
-    //* Forma recomendada , esto para mantener la integridad referencial en la base de datos
-//    const usuario = await Usuario.findByIdAndUpdate( id , { estado : false } , {new : true} );
-    
-    
-    //TODO : eliminar fisicamente del servidor    
-    res.json({
-        ok: true,
-        message : "Usuario eliminado",    
-        usuario
-    })
+        //TODO : eliminar fisicamente del servidor 
+
+        await rimraf(folderPath);
+        
+        //* Borrar fisicamente de la base de datos   
+        await Usuario.findByIdAndDelete(uid.toString()); 
+        
+        res.status(200).json({
+            ok: true,
+            message : "Usuario eliminado"
+        })
+
+    }catch(e){
+        console.log(e)
+        return res.status(500).json({
+            
+            ok : false ,
+            message : 'No ha sido posible eliminar el usuario  , por favor hable con el admistrador'
+        })
+    }   
+
+
 
 }
 
@@ -171,11 +197,10 @@ const updatePhotoProfile  = async ( req = request , res = response ) => {
             })
             
         } catch (e) {
-          
             console.log(e)
             return res.status(404).json({
                 ok : false,
-                message : 'no ha sido posible eliminar el archivo'
+                message : 'no hay imagen para eliminar'
             })
         }
     }
@@ -188,7 +213,8 @@ const updatePhotoProfile  = async ( req = request , res = response ) => {
             message : 'No hay archivos que subir'
         });
     } 
-   
+
+    
     if( usuario.img){
         
         try {
@@ -197,9 +223,9 @@ const updatePhotoProfile  = async ( req = request , res = response ) => {
         }catch (e){
             console.log(e);
             
-            return res.status(404).json({
+            return res.status(500).json({
                 ok : false,
-                message : 'no ha sido posible eliminar el archivo'
+                message : 'no ha sido posible eliminar el archivo  , por favor hable con el administrador'
             })
         }
 

@@ -26,7 +26,7 @@ const validarJWT = async ( req= request , res = response , next ) => {
             })
         }
         
-        //* podemos crear porpiedades dentro de la request , esto es oerfecto ya que la request es un objeto por referencia , esto quiere decir que lo que implementemos aqui podemos obtenerlo  mas adelante 
+        //* añadimos las credenciales del usuario  dentro de la request
         req.authenticatedUser = usuario
         
 

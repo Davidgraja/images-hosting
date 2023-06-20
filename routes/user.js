@@ -1,10 +1,10 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
 
-const { validarJWT , validarCampos , validarArchivos } =  require('../middlewares');
+const { validarJWT , validarCampos } =  require('../middlewares');
 
 const {usuariosGet , usuariosPut , usuariosPost , usuariosDelete , updatePhotoProfile , getPhotoProfile} = require("../controllers/user.controller");
-const { validateExistingEmail, validateExistingIdUser } = require('../helpers/db_validations');
+const { validateExistingEmail } = require('../helpers/db_validations');
 
 const router = Router();
 
@@ -19,12 +19,8 @@ router.patch('/' , [
 ] , updatePhotoProfile );
 
 
-router.put('/:id' ,[
+router.put('/' ,[
     validarJWT,
-    check('id' , 'el id enviado no es valido').isMongoId(),
-    check('id').custom( validateExistingIdUser ),
-    validarCampos
-
 ], usuariosPut );
 
 
@@ -37,12 +33,8 @@ router.post('/' ,[
 ] , usuariosPost );
 
 
-router.delete('/:id', [
+router.delete('/', [
     validarJWT,
-    check('id' , 'el id enviado no es valido').isMongoId(),
-    check('id').custom( validateExistingIdUser ),
-    validarCampos
-    
 ], usuariosDelete );
 
 module.exports = router;
