@@ -28,22 +28,18 @@ class Server {
 
     middlewares (){
 
-        /*Lectura y pareseo de la informacion del body*/
-
         this.app.use(express.json())
 
         /*Configuración de Cors*/
         this.app.use(cors());
 
-        /*Dicrectorio publico*/
-        this.app.use(express.static('public'));
-            
         // upload files config        
         this.app.use(fileUpload({
             useTempFiles : true,
             tempFileDir : '/tmp/',
             createParentPath: true
         }));
+        
     }
 
     routes (){

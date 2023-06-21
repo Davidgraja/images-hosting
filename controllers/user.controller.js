@@ -38,6 +38,7 @@ const getPhotoProfile = async  (req = request , res = response ) => {
     const usuario = await Usuario.findById(uid);
     
     const filePath = path.join( __dirname , '../uploads' , uid.toString() , 'profile', usuario.img );
+    
     if(!fs.existsSync(filePath)){
         return res.status(404).json({
             ok : false ,
@@ -145,7 +146,7 @@ const usuariosDelete = async (req = request, res = response ) => {
     
     try{
         
-        //TODO : eliminar fisicamente del servidor 
+        // * eliminando al usuario fisicamente del servidor 
 
         await rimraf(folderPath);
         
