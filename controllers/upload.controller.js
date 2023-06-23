@@ -1,11 +1,13 @@
 const path = require('path');
 const fs = require('fs');
 
+const { rimraf } = require('rimraf');
 const { request , response} = require('express');
 
 const Usuario = require('../models/usuario')
 
 const {uploadFile} = require('../helpers');
+const e = require('express');
 
 const getFiles = (req = request , res = response ) => {
     const { fileName , folder} = req.params;
@@ -75,9 +77,7 @@ const deleteImage =  async  (req = request, res = response) => {
         })
     }
 
-    
-    const user = await Usuario.findById(uid);
-    
+        
     const filePath  = path.join( __dirname , '../uploads' , uid.toString(), folder , fileName );
     const folderPath  = path.join( __dirname , '../uploads' , uid.toString(), folder )
     
@@ -89,7 +89,8 @@ const deleteImage =  async  (req = request, res = response) => {
     }
 
     try {
-        
+
+        const user = await Usuario.findById(uid);
         fs.unlinkSync( filePath );
 
         user.images = user.images.filter( img =>  img !== fileName );
@@ -117,12 +118,69 @@ const deleteImage =  async  (req = request, res = response) => {
             message : 'El archivo no ha sido encontrado'
         })
     }
+}
 
-    // res.json(result.length)
+
+const deleteFolder = async ( req = request , res = response ) => {
+
+    const {folderName} = req.params;
+
+    const {_id : uid} = req.authenticatedUser;
+
+
+    const folderPath = path.join( __dirname , '../uploads' , uid.toString() , folderName );
+
+    if(folderName === 'profile'){
+        return res.status(400).json({
+            ok : false,
+            message : 'no es posible eliminar esta carpeta'
+        })
+    }
+    if(!fs.existsSync(folderPath)){
+        return res.status(404).json({
+            ok : false,
+            message : 'la carpeta no ha sido encontrada'
+        })
+    }
+
+    try {
+
+        let usuario = await Usuario.findById(uid);
+
+        const folder = fs.readdirSync(folderPath);
+
+        
+        folder.forEach( item => {
+
+            usuario.images = usuario.images.filter(file => file !== item);
+
+        });
+
+
+        await usuario.save();
+        await rimraf(folderPath);
+
+        res.json({
+            ok : true,
+            message : 'carpeta eliminada'
+        })
+
+        
+    } catch (error) {
+
+        console.log(e)
+        
+        return res.status(500).json({
+            ok: false,
+            message : 'ha ocurrido un error , intentelo de nuevo o hable con el administrador'
+        })
+    }
+    
 }
 
 module.exports = {
     getFiles,
     uploadFiles,
-    deleteImage
+    deleteImage,
+    deleteFolder
 }

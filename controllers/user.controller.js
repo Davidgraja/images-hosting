@@ -1,7 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 
-const { rimraf } = require('rimraf')
+const { rimraf } = require('rimraf');
 const bcrypt = require('bcryptjs');
 const { response , request } = require('express');
 
