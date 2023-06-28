@@ -4,7 +4,8 @@ const fs = require('fs');
 const { rimraf } = require('rimraf');
 const { request , response} = require('express');
 
-const Usuario = require('../models/usuario')
+const UsuarioModel = require('../models/usuario')
+const FolderModel = require('../models/folder')
 
 const {uploadFile} = require('../helpers');
 const e = require('express');
@@ -34,25 +35,28 @@ const uploadFiles = async  ( req = request , res = response) => {
         
     const { folder = 'images' } = req.query;
     
-    if(folder === 'profile' || folder === 'perfil'){
+
+    if(folder === 'profile'){
         return res.status(400).json({
             ok : false ,
-            message : 'Nombre no permitido , porfavor intente con otro nombre'
-        })
-        
+            message : 'Nombre no permitido , por favor intente con otro nombre'
+        })     
     }
 
+
     try {
-        const user = await Usuario.findById(uid);
+        // todo : reconstruir la logica de subida de archivos
+        // const user = await Usuario.findById(uid);
+        const folderData = { imagenes : [] , usuario : uid , nombre : folder}
+        const newFolder = new FolderModel( folderData)
+        // const { nameTemporary } = await uploadFile(req.files , undefined , uid.toString() , folder );
+        // user.images = [ ...user.images , nameTemporary ]; 
 
-        const { nameTemporary } = await uploadFile(req.files , undefined , uid.toString() , folder );
-        user.images = [ ...user.images , nameTemporary ]; 
-
-        await user.save()
+        // await user.save()
 
         res.json({
             ok : true,
-            filename : nameTemporary
+            newFolder
         })
         
     } catch (message) {

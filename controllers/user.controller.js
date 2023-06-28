@@ -127,6 +127,11 @@ const usuariosPost = async (req = request, res = response ) => {
     //* Guardar en la base de datos 
     await usuario.save();
 
+
+    const folderPath = path.join(__dirname , '../uploads' , usuario._id.toString());
+        
+    fs.mkdirSync(folderPath)
+
     const token = await generarJWT(usuario._id.toString());
 
     res.json({

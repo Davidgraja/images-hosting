@@ -32,11 +32,6 @@ const UsuarioSchema = new Schema({
     google : {
         type: Boolean,
         default : false
-    },
-
-    images : {
-        type : Array,
-        default : []
     }
 })
 
