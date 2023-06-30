@@ -1,4 +1,5 @@
 const Usuario = require('../models/usuario');
+const FolderModel = require('../models/folder');
 
 const validateExistingEmail =  async ( correo = '' ) => {
 
@@ -10,6 +11,18 @@ const validateExistingEmail =  async ( correo = '' ) => {
 }
 
 
+const validateExistingFolder =  async ( id = '' ) => {
+    
+    const validatingFolder = await FolderModel.findById(id);
+
+    if(!validatingFolder){
+        throw new Error(`la carpeta no ha sido encontrada`);
+    }
+
+}
+
+
 module.exports = {
     validateExistingEmail,
+    validateExistingFolder
 }
