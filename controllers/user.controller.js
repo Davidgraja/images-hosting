@@ -5,7 +5,8 @@ const { rimraf } = require('rimraf');
 const bcrypt = require('bcryptjs');
 const { response , request } = require('express');
 
-const Usuario = require('../models/usuario');
+const UsuarioModel = require('../models/usuario');
+const FolderModel = require('../models/folder')
 
 const {generarJWT} = require("../helpers/generar_jwt");
 const {uploadFile} = require("../helpers/uploadFile");
@@ -17,9 +18,9 @@ const usuariosGet = async (req = request, res = response ) => {
     const { limit = 0 , from = 0 } = req.query;
     
     const [total , usuarios] = await Promise.all([
-        Usuario.countDocuments( query ),
+        UsuarioModel.countDocuments( query ),
 
-        Usuario.find( query )
+        UsuarioModel.find( query )
             .skip(Number(from))
             .limit( Number(limit))
     ]) 
@@ -31,18 +32,19 @@ const usuariosGet = async (req = request, res = response ) => {
 
 }
 
+// Todo : mover a el controlador de imagenes
 const getPhotoProfile = async  (req = request , res = response ) => {
 
     const {_id : uid} = req.authenticatedUser;
 
-    const usuario = await Usuario.findById(uid);
+    const usuario = await UsuarioModel.findById(uid);
     
     const filePath = path.join( __dirname , '../uploads' , uid.toString() , 'profile', usuario.img );
     
     if(!fs.existsSync(filePath)){
         return res.status(404).json({
             ok : false ,
-            message : 'imagen no encontrada'
+            msg : 'imagen no encontrada'
             
         })
     }
@@ -103,7 +105,7 @@ const usuariosPut =  async (req = request, res = response ) => {
         informationUser.correo = correo
     }
 
-    const usuario = await Usuario.findByIdAndUpdate(uid , informationUser ,{new:true});
+    const usuario = await UsuarioModel.findByIdAndUpdate(uid , informationUser ,{new:true});
 
     res.json({
         "message" : "Usuario actualizado",
@@ -117,7 +119,7 @@ const usuariosPost = async (req = request, res = response ) => {
 
     const {nombre , correo , password } = req.body;
 
-    const usuario = new Usuario({nombre , correo , password });
+    const usuario = new UsuarioModel({nombre , correo , password });
 
     //* encriptación  de la contraseña 
 
@@ -136,7 +138,7 @@ const usuariosPost = async (req = request, res = response ) => {
 
     res.json({
         ok: true,
-        message : "Usuario creado con exito",
+        msg : "Usuario creado con exito",
         usuario ,
         token
     })
@@ -156,11 +158,22 @@ const usuariosDelete = async (req = request, res = response ) => {
         await rimraf(folderPath);
         
         //* Borrar fisicamente de la base de datos   
-        await Usuario.findByIdAndDelete(uid.toString()); 
+        await UsuarioModel.findByIdAndDelete(uid.toString());
         
+        // * eliminando las carpetas de la base de datos
+        const removeFolders = [];
+
+        const folders = await FolderModel.find({usuario : uid});
+
+        folders.forEach(item => {
+            removeFolders.push(FolderModel.findByIdAndDelete(item._id))
+        })
+
+        await Promise.all(removeFolders)
+
         res.status(200).json({
             ok: true,
-            message : "Usuario eliminado"
+            msg : "Usuario eliminado"
         })
 
     }catch(e){
@@ -168,20 +181,19 @@ const usuariosDelete = async (req = request, res = response ) => {
         return res.status(500).json({
             
             ok : false ,
-            message : 'No ha sido posible eliminar el usuario  , por favor hable con el admistrador'
+            msg : 'No ha sido posible eliminar el usuario  , por favor hable con el admistrador'
         })
     }   
 
-
-
 }
 
+// Todo : mover a el controlador de imagenes
 const updatePhotoProfile  = async ( req = request , res = response ) => {
     const {_id : uid} = req.authenticatedUser;
 
     const { remove = false } = req.query;
 
-    const usuario = await Usuario.findById(uid);
+    const usuario = await UsuarioModel.findById(uid);
 
     const filePath = path.join( __dirname , '../uploads' , uid.toString() , 'profile', usuario.img );
 
@@ -199,14 +211,14 @@ const updatePhotoProfile  = async ( req = request , res = response ) => {
             
             return res.json({
                 ok : true ,
-                message : 'imagen actualizada'
+                msg : 'imagen actualizada'
             })
             
         } catch (e) {
             console.log(e)
             return res.status(404).json({
                 ok : false,
-                message : 'no hay imagen para eliminar'
+                msg : 'no hay imagen para eliminar'
             })
         }
     }
@@ -216,7 +228,7 @@ const updatePhotoProfile  = async ( req = request , res = response ) => {
     if (!req.files || Object.keys(req.files).length === 0 || !req.files.file) {
         return res.status(400).json({
             ok : false ,
-            message : 'No hay archivos que subir'
+            msg : 'No hay archivos que subir'
         });
     } 
 
@@ -231,7 +243,7 @@ const updatePhotoProfile  = async ( req = request , res = response ) => {
             
             return res.status(500).json({
                 ok : false,
-                message : 'no ha sido posible eliminar el archivo  , por favor hable con el administrador'
+                msg : 'no ha sido posible eliminar el archivo  , por favor hable con el administrador'
             })
         }
 
@@ -245,7 +257,7 @@ const updatePhotoProfile  = async ( req = request , res = response ) => {
 
     res.json({
         ok : true,
-        message : 'imagen actualizada'
+        msg : 'imagen actualizada'
     })
 }
 

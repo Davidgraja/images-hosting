@@ -1,11 +1,18 @@
 const { Router } = require('express')
-const { createFolder, updateFolder ,deleteFolder} = require('../controllers/folder.controller');
+const { createFolder, updateFolder ,deleteFolder , getFolders , getFolder} = require('../controllers/folder.controller');
 const { validarJWT, validarCampos } = require('../middlewares');
 const { check } = require('express-validator');
 const { validateExistingFolder } = require('../helpers');
 
 
 const router = Router();
+
+router.get('/search' ,[
+    validarJWT
+
+] , getFolder );
+
+router.get('/' , validarJWT , getFolders )
 
 router.post('/' ,[
     validarJWT,

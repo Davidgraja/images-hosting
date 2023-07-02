@@ -5,6 +5,80 @@ const { rimraf } = require('rimraf');
 const { request, response } = require('express');
 
 const FolderModel = require('../models/folder');
+const isValidObjectId = require('../helpers/isValidObjectId');
+
+const getFolder =  async ( req = request , res = response ) => {
+
+    const {_id : uid} = req.authenticatedUser;
+
+    const {nombre , id} = req.query;
+
+    if(id){
+        const validatingId = isValidObjectId(id);
+
+        if(!validatingId){
+            return res.status(400).json({
+                ok : false ,
+                msg : 'El id enviado no valido'
+            }) 
+        }
+
+        
+        const folder = await FolderModel.findById(id);
+
+        if(!folder){
+            return res.status(404).json({
+                ok : false,
+                msg : `No ha sido  encontrada la carpeta  con el identificador ${id}`
+            })
+        }
+
+        return  res.json({
+            ok : true,
+            folder
+        })
+    }
+
+    if(nombre){
+
+        const regex = new RegExp(nombre , 'i');
+
+        const folder = await FolderModel.find({nombre : regex , $and:[{ usuario:uid }]})
+        
+        return res.json(folder)
+    }
+
+    res.status(400).json({
+        ok : false,
+        msg : 'por favor envie por medio de un query la manera que  desea buscar su carpeta , es posible realizar la busqueda ya sea por nombre o id'
+    });
+
+}
+
+const getFolders = async ( req = request , res = response ) => {
+
+    const {_id : uid} = req.authenticatedUser;
+
+    try {
+
+        const folders = await FolderModel.find({usuario : uid})
+
+        res.json({
+            ok : true,
+            folders
+        })
+
+        
+    } catch (e) {
+        console.log(e);
+        res.status(500).json({
+            ok : false ,
+            msg : 'A ocurrido un error , intentelo de nuevo o comuniquese con el administrador'
+        })
+    }
+
+
+}
 
 const createFolder = async ( req = request , res = response ) => {
 
@@ -112,7 +186,7 @@ const deleteFolder = async ( req = request , res = response ) => {
 
         res.json({
             ok : true,
-            message : 'carpeta eliminada'
+            msg: 'carpeta eliminada'
         })
 
         
@@ -122,13 +196,15 @@ const deleteFolder = async ( req = request , res = response ) => {
         
         return res.status(500).json({
             ok: false,
-            message : 'ha ocurrido un error , intentelo de nuevo o hable con el administrador'
+            msg : 'ha ocurrido un error , intentelo de nuevo o hable con el administrador'
         })
     }
 
 }
 
 module.exports = {
+    getFolder,
+    getFolders,
     createFolder,
     updateFolder,
     deleteFolder
