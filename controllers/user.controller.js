@@ -32,7 +32,6 @@ const usuariosGet = async (req = request, res = response ) => {
 
 }
 
-// Todo : mover a el controlador de imagenes
 const getPhotoProfile = async  (req = request , res = response ) => {
 
     const {_id : uid} = req.authenticatedUser;
@@ -187,7 +186,6 @@ const usuariosDelete = async (req = request, res = response ) => {
 
 }
 
-// Todo : mover a el controlador de imagenes
 const updatePhotoProfile  = async ( req = request , res = response ) => {
     const {_id : uid} = req.authenticatedUser;
 
@@ -250,10 +248,10 @@ const updatePhotoProfile  = async ( req = request , res = response ) => {
     }  
     
 
-    const { nameTemporary } = await uploadFile(req.files , undefined , uid.toString() , 'profile' );
+    const nameTemporary  = await uploadFile(req.files , undefined , uid.toString() , 'profile' );
     
     usuario.img = nameTemporary;
-    usuario.save();
+    await usuario.save();
 
     res.json({
         ok : true,

@@ -1,7 +1,7 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
 
-const { validarJWT , validarCampos } =  require('../middlewares');
+const { validarJWT , validarCampos, validarArchivos } =  require('../middlewares');
 
 const {usuariosGet , usuariosPut , usuariosPost , usuariosDelete , updatePhotoProfile , getPhotoProfile} = require("../controllers/user.controller");
 const { validateExistingEmail } = require('../helpers/db_validations');
@@ -16,6 +16,7 @@ router.get('/photo' , validarJWT , getPhotoProfile  );
 
 router.patch('/' , [
     validarJWT ,
+    validarArchivos
 ] , updatePhotoProfile );
 
 
