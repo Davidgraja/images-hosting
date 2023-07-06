@@ -9,7 +9,6 @@ class Server {
         this.port = process.env.PORT
         this.usuarioPath = '/api/users';
         this.authPath = '/api/auth';
-        this.uploadPath = '/api/upload';
         this.folderPath = '/api/folders';
         this.imagesPath = '/api/images';
 
@@ -48,7 +47,6 @@ class Server {
 
         this.app.use(this.authPath , require('../routes/auth'));
         this.app.use( this.usuarioPath , require('../routes/user'));
-        this.app.use( this.uploadPath , require('../routes/upload'));
         this.app.use( this.folderPath , require('../routes/folder'));
         this.app.use( this.imagesPath , require('../routes/images'));
     }
