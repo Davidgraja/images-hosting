@@ -5,7 +5,6 @@ const Usuario = require('../models/usuario');
 
 const { generarJWT } = require("../helpers/generar_jwt");
 
-
 const login = async (req = request , res = response) => {
 
     const { correo , password } = req.body;
@@ -18,7 +17,7 @@ const login = async (req = request , res = response) => {
         if( !usuario ){
             return res.status(400).json({
                 ok : false ,
-                message : 'correo / passsword no son correctos'
+                msg : 'correo / passsword no son correctos'
             });
         }
 
@@ -26,7 +25,7 @@ const login = async (req = request , res = response) => {
         if( !usuario.estado ){
             return res.status(400).json({
                 ok : false ,
-                message : 'correo / passsword no son correctos'
+                msg : 'correo / passsword no son correctos'
             });
         }
 
@@ -36,7 +35,7 @@ const login = async (req = request , res = response) => {
         if( !validatePassword ){
             return res.status(400).json({
                 ok : false,
-                message : 'correo / passsword no son correctos - password : false'
+                msg : 'correo / passsword no son correctos - password : false'
             });
         }
 
@@ -54,12 +53,12 @@ const login = async (req = request , res = response) => {
         
         return res.status(500).json({
             ok : false , 
-            message : 'Por favor comuniquese con el administrador'
+            msg : 'Por favor comuniquese con el administrador'
         });
 
     }
 }
 
 module.exports = {
-    login ,
+    login
 }
