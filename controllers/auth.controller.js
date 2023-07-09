@@ -1,5 +1,8 @@
+const fs = require("fs");
+const path = require("path");
+
 const { request, response } = require("express");
-const bcryptjs = require('bcryptjs');
+const bcrypt = require('bcryptjs');
 
 const Usuario = require('../models/usuario');
 
@@ -30,7 +33,7 @@ const login = async (req = request , res = response) => {
         }
 
         //? Verificación de la contraseña 
-        const validatePassword = bcryptjs.compareSync(password , usuario.password);
+        const validatePassword = bcrypt.compareSync(password , usuario.password);
 
         if( !validatePassword ){
             return res.status(400).json({
@@ -59,6 +62,66 @@ const login = async (req = request , res = response) => {
     }
 }
 
+const loginWithGoogle = async  ( req = request , res = response ) => {
+    const { nombre , correo , img } = req.body;
+
+    try {
+        let user = await Usuario.findOne({ correo });
+    
+        
+        if(user){
+            const token = await generarJWT(user._id.toString())
+            return res.json({
+                ok : true,
+                msg : 'usuario encontrado',
+                user,
+                token
+            })
+        }
+        
+        const infoUser = {
+            nombre,
+            correo,
+            password : 'HosTingWeb12ñ',
+            google : true
+        }
+
+        if(img){
+            infoUser.img = img
+        }
+
+        const salt = bcrypt.genSaltSync();
+        infoUser.password = bcrypt.hashSync(infoUser.password , salt);
+
+        user = new Usuario( infoUser);
+
+        await user.save();
+
+        const userPath = path.join( __dirname , '../uploads', user._id.toString());
+        fs.mkdirSync(userPath);
+
+        const token = await generarJWT(user._id.toString());
+
+        return res.json({
+            ok : true,
+            msg: 'usuario creado',
+            user,
+            token
+        })
+
+        
+    
+    }catch (e) {
+        console.log(e)
+        return res.status(500).json({
+            ok : false,
+            msg : 'Ah ocurrido un error , por favor intentelo de nuevo o hable con el administrador'
+        })
+    }
+
+}
+
 module.exports = {
-    login
+    login,
+    loginWithGoogle
 }

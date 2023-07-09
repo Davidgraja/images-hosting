@@ -9,7 +9,6 @@ const router = Router();
 
 router.get('/search' ,[
     validarJWT
-
 ] , getFolder );
 
 router.get('/' , validarJWT , getFolders )
