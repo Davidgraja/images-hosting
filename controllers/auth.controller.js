@@ -62,9 +62,9 @@ const login = async (req = request , res = response) => {
     }
 }
 
-const loginWithGoogle = async  ( req = request , res = response ) => {
-    const { nombre , correo , img } = req.body;
-
+const loginWithGoogleAndGithub = async  ( req = request , res = response ) => {
+    const { nombre , correo , img , provider } = req.body;
+        
     try {
         let user = await Usuario.findOne({ correo });
     
@@ -78,14 +78,20 @@ const loginWithGoogle = async  ( req = request , res = response ) => {
                 token
             })
         }
-        
         const infoUser = {
             nombre,
             correo,
-            password : 'HosTingWeb12ñ',
-            google : true
+            password : 'HosTingWeb12ñ'
         }
 
+    
+        if(provider.includes('google')){
+            infoUser.google = true
+        }
+        else if (provider.includes('github')){
+            infoUser.github = true
+        }
+        
         if(img){
             infoUser.img = img
         }
@@ -123,5 +129,5 @@ const loginWithGoogle = async  ( req = request , res = response ) => {
 
 module.exports = {
     login,
-    loginWithGoogle
+    loginWithGoogleAndGithub
 }

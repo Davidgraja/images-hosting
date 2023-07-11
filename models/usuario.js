@@ -32,6 +32,11 @@ const UsuarioSchema = new Schema({
     google : {
         type: Boolean,
         default : false
+    },
+
+    github : {
+        type: Boolean,
+        default : false
     }
 })
 
