@@ -3,8 +3,7 @@ const { check } = require('express-validator');
 
 const { validarJWT , validarCampos, validarArchivos , validateEmail} =  require('../middlewares');
 
-const {usuariosGet , usuariosPut , usuariosPost , usuariosDelete , updatePhotoProfile , getPhotoProfile} = require("../controllers/user.controller");
-const { validateExistingEmail } = require('../helpers/db_validations');
+const {usuariosGet , usuariosPut , usuariosPost , usuariosDelete , updatePhotoProfile , getPhotoProfile} = require("../controllers/user.controller")
 
 const router = Router();
 
@@ -28,8 +27,7 @@ router.put('/' ,[
 router.post('/' ,[
     check('correo' , 'el correo no es valido').isEmail(),
     check('nombre' , 'el nombre es obligatorio y con un minimo de 4 digitos').notEmpty().isLength({min:4}),
-    check('password' , 'el password debe de ser mayor de 6 digitos').isLength({min:6}),    
-//    check('correo').custom( validateExistingEmail ),
+    check('password' , 'el password debe de ser mayor de 6 digitos').isLength({min:6}),
     validarCampos,
     validateEmail
 ] , usuariosPost );
