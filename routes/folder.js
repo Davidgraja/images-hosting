@@ -1,9 +1,7 @@
 const { Router } = require('express')
 const { createFolder, updateFolder ,deleteFolder , getFolders , getFolder} = require('../controllers/folder.controller');
-const { validarJWT, validarCampos } = require('../middlewares');
+const { validarJWT, validarCampos , validateFolder} = require('../middlewares');
 const { check } = require('express-validator');
-const { validateExistingFolder } = require('../helpers');
-
 
 const router = Router();
 
@@ -22,15 +20,15 @@ router.post('/' ,[
 router.patch('/:id' , [
     validarJWT,
     check('id' , 'el id no es valido , por favor verifiquelo e intentelo de nuevo').isMongoId(),
-    check('id').custom(validateExistingFolder),
-    validarCampos
+    validarCampos,
+    validateFolder
 ], updateFolder);
 
 router.delete('/:id' , [
     validarJWT,
     check('id' , 'el id no es valido , por favor verifiquelo e intentelo de nuevo').isMongoId(),
-    check('id').custom(validateExistingFolder),
-    validarCampos
+    validarCampos,
+    validateFolder
 ], deleteFolder)
 
 module.exports= router
