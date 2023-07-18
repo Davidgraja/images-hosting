@@ -5,6 +5,7 @@ const Usuario = require('../models/usuario');
 
 const { generarJWT } = require("../helpers/generar_jwt");
 
+
 const login = async (req = request , res = response) => {
     
     const msgNoFound = 'correo o passsword incorrectos por favor verifique sus credenciales e intentelo de nuevo'
@@ -53,6 +54,24 @@ const login = async (req = request , res = response) => {
     }
 }
 
+const renewToken = async ( req = request , res = response ) =>{
+
+    const {id} = req.authenticatedUser 
+
+    try {
+        const token = await generarJWT(id)
+
+        res.json({
+            ok : true,
+            token
+        })
+    } catch (error) {
+        console.log(error)
+        res.status(500).json(error)
+    }
+}
+
 module.exports = {
-    login
+    login,
+    renewToken
 }
