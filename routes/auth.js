@@ -11,4 +11,6 @@ router.post('/login',[
     validarCampos
 ], login);
 
+//Todo : implementar la renovacion de token
+
 module.exports = router;
