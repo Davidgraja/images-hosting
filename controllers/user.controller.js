@@ -25,10 +25,7 @@ const usuariosGet = async (req = request, res = response ) => {
             .limit( Number(limit))
     ]) 
     
-    res.json({
-        total,
-        usuarios
-    })
+    res.json(usuarios)
 
 }
 

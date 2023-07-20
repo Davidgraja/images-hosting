@@ -21,6 +21,8 @@
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^7.0.0",
     "rimraf": "^5.0.1",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.0",
     "uuid": "^9.0.0"
   }
 }

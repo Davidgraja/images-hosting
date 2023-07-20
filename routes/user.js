@@ -7,6 +7,54 @@ const {usuariosGet , usuariosPut , usuariosPost , usuariosDelete , updatePhotoPr
 
 const router = Router();
 
+/**
+* @swagger
+* components: 
+*   schemas:
+*       User:
+*           type: object
+*           properties:
+*               nombre:
+*                   type: string
+*                   description: el nombre del usuario
+*               correo:
+*                   type: string
+*                   description: correo electronico del usuario
+*               password:
+*                   type: string
+*                   description: contraseña del usuario
+*               img: 
+*                   type: string
+*                   description: imagen del usuario 
+*               estado:
+*                   type: boolean
+*                   description: estado del usuario
+*           required:
+*               - nombre
+*               - correo
+*               - password
+*           example:
+*               nombre: Juan Carlos
+*               correo: juanCarlos47@gmail.com
+*               password: juan47
+*/
+
+/**
+ * @swagger
+ * /api/users:
+ *      get:
+ *          summary: retorna todos los usuarios
+ *          tags: [User] 
+ *          responses:
+ *              200:
+ *                  description: ok , se entregan todos los usuarios
+ *                  content:
+ *                      application/json:
+ *                          schema:
+ *                              type: array
+ *                              items: 
+ *                                  $ref: '#/components/schemas/User'
+*/
 router.get('/' ,  usuariosGet  );
 
 
