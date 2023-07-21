@@ -57,9 +57,9 @@ const usuariosPut =  async (req = request, res = response ) => {
 
     if( password ){
         if(password.trim().length < 6){
-            return res.status(406).json({
+            return res.status(400).json({
                 ok : false ,
-                message : 'el password debe de tener como minimo 6 caracteres'
+                msg : 'el password debe de tener como minimo 6 caracteres'
             })
         }
 
@@ -73,14 +73,14 @@ const usuariosPut =  async (req = request, res = response ) => {
         if(typeof (nombre) !== 'string'){
             return res.status(400).json({
                 ok : false ,
-                message : 'el nombre tiene que ser una cadena de texto'
+                msg : 'el nombre tiene que ser una cadena de texto'
             })
         }
 
         if(nombre.trim().length < 4){
-            return res.status(406).json({
+            return res.status(400).json({
                 ok : false ,
-                message : 'el nombre debe de tener como minimo 4 caracteres'
+                msg : 'el nombre debe de tener como minimo 4 caracteres'
             })
         }
 
@@ -92,9 +92,9 @@ const usuariosPut =  async (req = request, res = response ) => {
 
     if(correo){
         if( !correo.includes('@') ){
-            return res.status(406).json({
+            return res.status(400).json({
                 ok: false,
-                message : 'el correo no es permitido , por favor verifique que este escrito correctamente e  intentelo de nuevo'
+                msg : 'el correo no es permitido , por favor verifique que este escrito correctamente e  intentelo de nuevo'
             })
         }
         
@@ -104,7 +104,7 @@ const usuariosPut =  async (req = request, res = response ) => {
     const usuario = await UsuarioModel.findByIdAndUpdate(uid , informationUser ,{new:true});
 
     res.json({
-        "message" : "Usuario actualizado",
+        msg: "Usuario actualizado",
         ok: true,
         usuario
     })
