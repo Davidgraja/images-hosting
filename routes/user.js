@@ -1,9 +1,9 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
 
-const { validarJWT , validarCampos, validarArchivos , validateEmail} =  require('../middlewares');
+const { validarJWT , validarCampos , validateEmail} =  require('../middlewares');
 
-const {usuariosGet , usuariosPut , usuariosPost , usuariosDelete , updatePhotoProfile , getPhotoProfile} = require("../controllers/user.controller")
+const {usuariosGet , usuariosPut , usuariosPost , usuariosDelete , updatePhotoProfile , getPhotoProfile, usuarioGet} = require("../controllers/user.controller")
 
 const router = Router();
 
@@ -36,7 +36,9 @@ const router = Router();
 *           example:
 *               nombre: Juan Carlos
 *               correo: juanCarlos47@gmail.com
-*               password: juan47             
+*               password: juan47
+*               img : ''
+*               estado: true                                      
 */
 
 /**
@@ -60,13 +62,177 @@ const router = Router();
 */
 router.get('/' ,  usuariosGet  );
 
+/**
+* @swagger
+* /api/users/user:
+*   get:
+*       description: Este Enpoint te retorna un solo usuario en base a su token de autenticación
+*       summary: Obtener un usuario
+*       parameters:
+*          - in: header
+*            name: x-token
+*            schema:
+*                type: string
+*            required: true
+*            description:  token de autenticación del usuario entregado al hacer login o crear un usuario
+*       tags: [User] 
+*       responses:
+*           200:
+*              description: ok , se entregara el usuario
+*              content:
+*                 application/json:
+*                     schema:
+*                        type: object
+*                        properties:
+*                            usuario:
+*                               type: object
+*                               $ref: '#/components/schemas/User'
+*           401:
+*              description: Error al validar el token de autenticación 
+*              content:
+*                  application/json: 
+*                      schema:
+*                          type: object
+*                          properties:
+*                              msg:
+*                                type: string
+*                                description: mensaje con el error al validar el jwt    
+*/
+router.get('/user' , validarJWT , usuarioGet)
 
+/**
+* @swagger
+* /api/users/photo:
+*   get:
+*       description: Este Enpoint puedes obtener la foto del usuario
+*       summary: optener foto de usuario
+*       parameters:
+*           - in: header
+*             name: x-token
+*             schema: 
+*               type: string            
+*             required: true
+*             description: token de autenticación del usuario entregado al hacer login o crear un usuario
+*       responses:
+*           200: 
+*              description: imagen del usuario
+*              content:
+*                 schema:
+*                    type: string
+*                    format: binary 
+*           404:
+*              description: No se encontro la imagen del usuario
+*              content:
+*                  application/json: 
+*                      schema:
+*                        type: object
+*                        properties:
+*                            ok:
+*                               type: boolean
+*                               default : false    
+*                            msg:
+*                               type: string
+*                               default: imagen no encontrada                                 
+*/
 router.get('/photo' , validarJWT , getPhotoProfile  );
 
-
-router.patch('/' , [
-    validarJWT ,
-    validarArchivos
+/**
+* @swagger
+* /api/users/image:
+*   patch:
+*       description: Este Enpoint te permite actualizar la imagen de un usuario , solo seran permitidas aquellas imagenes con extencion  png , jpg , jpeg , gif
+*       summary: actualizar foto de un usuario
+*       parameters:
+*          - in: header
+*            name: x-token
+*            schema:
+*                type: string
+*            required: true
+*            description:  token de autenticación del usuario entregado al hacer login o crear un usuario 
+* 
+*          - in: query
+*            name: remove
+*            schema: 
+*               type: boolean
+*            description: con remove puedes eliminar la imagen del usuario desde este mismo enpoint , solo debes enviarlo cuando quieras eliminar la eliminar la imagen actual caso contrario puedes ignorarlo
+*
+*       requestBody:
+*           content:
+*              multipart/form-data:  
+*                  schema:
+*                        type: object
+*                        properties:
+*                            file:
+*                                type: string
+*                                format: binary                                                       
+*                       
+*
+*       responses:
+*           401:
+*              description: Error al validar el token de autenticación 
+*              content:
+*                  application/json: 
+*                      schema:
+*                        type: object
+*                        properties:
+*                            msg:
+*                               type: string
+*                               description: mensaje con el error al validar el jwt
+*           200:
+*              description: ok, se actualizo correctamente la imagen del usuario 
+*              content:
+*                  application/json: 
+*                      schema:
+*                        type: object
+*                        properties:
+*                            ok:
+*                               type: boolean
+*                               default : true    
+*                            msg:
+*                               type: string
+*                               default: imagen actualizada
+*           404:
+*              description: No se encontro la imagen , no hay imagen por eliminar 
+*              content:
+*                  application/json: 
+*                      schema:
+*                        type: object
+*                        properties:
+*                            ok:
+*                               type: boolean
+*                               default : false    
+*                            msg:
+*                               type: string
+*                               default: no hay imagen para eliminar
+*           400:
+*              description: No se envio la imagen para asignarsela al usuario
+*              content:
+*                  application/json: 
+*                      schema:
+*                        type: object
+*                        properties:
+*                            ok:
+*                               type: boolean
+*                               default : false    
+*                            msg:
+*                               type: string
+*                               default: No hay archivos que subir
+*           500:
+*              description: Error al procesar la petición en el servidor
+*              content:
+*                  application/json: 
+*                      schema:
+*                        type: object
+*                        properties:
+*                            ok:
+*                               type: boolean
+*                               default : false    
+*                            msg:
+*                               type: string
+*                               default: no ha sido posible eliminar el archivo  , por favor hable con el administrador          
+*/
+router.patch('/image' , [
+    validarJWT 
 ] , updatePhotoProfile );
 
 /**
@@ -120,6 +286,16 @@ router.patch('/' , [
 *                               type: boolean
 *                               description: boleano que indica si salio todo correcto
 *                               default: false
+*            401:
+*              description: Error al validar el token de autenticación 
+*              content:
+*                  application/json: 
+*                      schema:
+*                          type: object
+*                          properties:
+*                              msg:
+*                                type: string
+*                                description: mensaje con el error al validar el jwt
 */
 router.put('/' ,[
     validarJWT,
@@ -190,7 +366,40 @@ router.post('/' ,[
     validateEmail
 ] , usuariosPost );
 
-
+/**
+* @swagger
+* /api/users:
+*   delete:
+*       summary: Eliminar un usuario 
+*       tags: [User] 
+*       responses:
+*           200:
+*              description: ok , se elimino el usuario 
+*              content:
+*                 application/json:
+*                     schema:
+*                        type: object
+*                        properties: 
+*                           ok: 
+*                               type: boolean
+*                               default: true            
+*                           msg:
+*                               type: string
+*                               default: Usuario eliminado 
+*           500:
+*              description: hubo un error en el servidor  
+*              content:
+*                 application/json:
+*                     schema:
+*                        type: object
+*                        properties: 
+*                           ok: 
+*                               type: boolean
+*                               default: false            
+*                           msg:
+*                               type: string
+*                               default: No ha sido posible eliminar el usuario  , por favor hable con el admistrador    
+*/
 router.delete('/', [
     validarJWT,
 ], usuariosDelete );

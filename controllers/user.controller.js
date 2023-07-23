@@ -17,15 +17,22 @@ const usuariosGet = async (req = request, res = response ) => {
     
     const { limit = 0 , from = 0 } = req.query;
     
-    const [total , usuarios] = await Promise.all([
-        UsuarioModel.countDocuments( query ),
+    const usuarios = await UsuarioModel.find(query).skip(Number(from)).limit(Number(limit))
 
-        UsuarioModel.find( query )
-            .skip(Number(from))
-            .limit( Number(limit))
-    ]) 
-    
     res.json(usuarios)
+
+}
+
+
+const usuarioGet = async ( req = request , res = response ) => {
+
+    const {_id : uid} = req.authenticatedUser;
+    const usuario = await UsuarioModel.findById(uid); 
+    
+    res.json({
+        usuario
+    })
+
 
 }
 
@@ -210,7 +217,6 @@ const updatePhotoProfile  = async ( req = request , res = response ) => {
             })
             
         } catch (e) {
-            console.log(e)
             return res.status(404).json({
                 ok : false,
                 msg : 'no hay imagen para eliminar'
@@ -260,6 +266,7 @@ const updatePhotoProfile  = async ( req = request , res = response ) => {
     
 module.exports = {
     usuariosGet,
+    usuarioGet,
     getPhotoProfile,
     usuariosPut,
     updatePhotoProfile,
