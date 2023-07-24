@@ -151,6 +151,13 @@ const updateFolder = async ( req = request , res = response ) => {
 
     if(nombre){
 
+        if(!isNaN(nombre)){
+            return res.status(400).json({
+                ok :  false,
+                msg : 'no se admiten numeros , solo cadenas texto'
+            })
+        }
+
         const folderOldPath = path.join(__dirname, '../uploads' , uid.toString() , validatingFolder.nombre )
         const folderNewPath = path.join(__dirname, '../uploads' , uid.toString() , nombre)
         
@@ -163,7 +170,7 @@ const updateFolder = async ( req = request , res = response ) => {
             
             return res.json({
                 ok : true,
-                msg : 'Nombre actualizado'
+                msg : 'carpeta actualizada'
             })
             
         } catch (error) {
@@ -176,7 +183,10 @@ const updateFolder = async ( req = request , res = response ) => {
 
     }
     
-    res.json('solo es posible actualizar el nombre en este enpoint , verique el campo enviado e intentelo de nuevo');
+    res.status(400).json({
+        ok: false,
+        msg: 'solo es posible actualizar el nombre  , verique que se este enviando el campo correctamente e intentelo de nuevo',
+    });
     
     
 }

@@ -252,6 +252,100 @@ router.post('/' ,[
     validarCampos
 ] , createFolder );
 
+ /**
+ * @swagger
+ * /api/folders/{id}:
+ *  patch:
+ *      summary: actualizar carpeta 
+ *      description: Enpoint que te permitira actualizar una carpeta asociada a un usuario
+ *      tags: [Folder] 
+ *      parameters:
+ *          - in: header
+ *            name: x-token
+ *            schema:
+ *                type: string
+ *            required: true
+ *            description:  token de autenticación del usuario entregado al hacer login o crear un usuario
+ *          - in: path
+ *            name: id
+ *            schema:
+ *                type: string
+ *            required: true
+ *            description:  id de la carpeta
+ *      requestBody:
+ *           content:
+ *              application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                              nombre:
+ *                                  type: string
+ *                                  description: Nuevo nombre de la carpeta
+ *                                  required: true                               
+ *      responses:
+ *           200:
+ *             description: se entrega la carpeta encontrada
+ *             content: 
+ *                  application/json:
+ *                      schema: 
+ *                          type: object
+ *                          properties:
+ *                              ok: 
+ *                                  type: boolean
+ *                                  default : true
+ *                              msg:
+ *                                  type: string
+ *                                  default: Carpeta actualizada
+ *           401:
+ *             description: Error al validar el token de autenticación 
+ *             content:
+ *                  application/json: 
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                              msg:
+ *                                type: string
+ *                                description: mensaje con el error al validar el jwt
+ *           400: 
+ *             description: El id enviado no es valido  o el campo nombre dentro del body no fue enviado o se envio en un formato incorecto
+ *             content:
+ *                  application/json: 
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                              ok:
+ *                                type: boolean
+ *                                defualt: false
+ *                              msg:
+ *                                type: string
+ *                                description: mensaje descriptivo sobre el porque  del error
+ *           404:
+ *              description: No se encontro la carpeta en la base de datos 
+ *              content:
+ *                  application/json: 
+ *                      schema:
+ *                        type: object
+ *                        properties:
+ *                            ok:
+ *                               type: boolean
+ *                               default : false    
+ *                            msg:
+ *                               type: string
+ *                               default: la carpeta no ha sido encontrada 
+ *           500:
+ *             description: Error del servidor
+ *             content: 
+ *                  application/json:
+ *                      schema: 
+ *                          type: object
+ *                          properties:
+ *                              ok: 
+ *                                  type: boolean
+ *                                  default : false
+ *                              msg:
+ *                                  type: string
+ *                                  default: A ocurrido un error , intentelo de nuevo o comuniquese con el administrador
+ */
 router.patch('/:id' , [
     validarJWT,
     check('id' , 'el id no es valido , por favor verifiquelo e intentelo de nuevo').isMongoId(),
@@ -259,6 +353,90 @@ router.patch('/:id' , [
     validateFolder
 ], updateFolder);
 
+ /**
+ * @swagger
+ * /api/folders/{id}:
+ *  delete:
+ *      summary: Eliminar carpeta 
+ *      description: Enpoint que te permitira eliminar una carpeta asociada a un usuario
+ *      tags: [Folder] 
+ *      parameters:
+ *          - in: header
+ *            name: x-token
+ *            schema:
+ *                type: string
+ *            required: true
+ *            description:  token de autenticación del usuario entregado al hacer login o crear un usuario
+ *          - in: path
+ *            name: id
+ *            schema:
+ *                type: string
+ *            required: true
+ *            description:  id de la carpeta                             
+ *      responses:
+ *           200:
+ *             description: se entrega la carpeta encontrada
+ *             content: 
+ *                  application/json:
+ *                      schema: 
+ *                          type: object
+ *                          properties:
+ *                              ok: 
+ *                                  type: boolean
+ *                                  default : true
+ *                              msg:
+ *                                  type: string
+ *                                  default: Carpeta eliminada
+ *           401:
+ *             description: Error al validar el token de autenticación 
+ *             content:
+ *                  application/json: 
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                              msg:
+ *                                type: string
+ *                                description: mensaje con el error al validar el jwt
+ *           400: 
+ *             description: El id enviado no es valido  o el campo nombre dentro del body no fue enviado o se envio en un formato incorecto
+ *             content:
+ *                  application/json: 
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                              ok:
+ *                                type: boolean
+ *                                defualt: false
+ *                              msg:
+ *                                type: string
+ *                                description: mensaje descriptivo sobre el porque  del error
+ *           404:
+ *              description: No se encontro la carpeta en la base de datos 
+ *              content:
+ *                  application/json: 
+ *                      schema:
+ *                        type: object
+ *                        properties:
+ *                            ok:
+ *                               type: boolean
+ *                               default : false    
+ *                            msg:
+ *                               type: string
+ *                               default: la carpeta no ha sido encontrada 
+ *           500:
+ *             description: Error del servidor
+ *             content: 
+ *                  application/json:
+ *                      schema: 
+ *                          type: object
+ *                          properties:
+ *                              ok: 
+ *                                  type: boolean
+ *                                  default : false
+ *                              msg:
+ *                                  type: string
+ *                                  default: A ocurrido un error , intentelo de nuevo o comuniquese con el administrador
+ */
 router.delete('/:id' , [
     validarJWT,
     check('id' , 'el id no es valido , por favor verifiquelo e intentelo de nuevo').isMongoId(),
