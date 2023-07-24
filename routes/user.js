@@ -33,12 +33,6 @@ const router = Router();
 *               - nombre
 *               - correo
 *               - password
-*           example:
-*               nombre: Juan Carlos
-*               correo: juanCarlos47@gmail.com
-*               password: juan47
-*               img : ''
-*               estado: true                                      
 */
 
 /**
@@ -67,7 +61,7 @@ router.get('/' ,  usuariosGet  );
 * /api/users/user:
 *   get:
 *       description: Este Enpoint te retorna un solo usuario en base a su token de autenticación
-*       summary: Obtener un usuario
+*       summary: Obtener un usuario 
 *       parameters:
 *          - in: header
 *            name: x-token
@@ -106,6 +100,7 @@ router.get('/user' , validarJWT , usuarioGet)
 *   get:
 *       description: Este Enpoint puedes obtener la foto del usuario
 *       summary: optener foto de usuario
+*       tags: [User] 
 *       parameters:
 *           - in: header
 *             name: x-token
@@ -132,7 +127,17 @@ router.get('/user' , validarJWT , usuarioGet)
 *                               default : false    
 *                            msg:
 *                               type: string
-*                               default: imagen no encontrada                                 
+*                               default: imagen no encontrada   
+*           401:
+*              description: Error al validar el token de autenticación 
+*              content:
+*                  application/json: 
+*                      schema:
+*                          type: object
+*                          properties:
+*                              msg:
+*                                type: string
+*                                description: mensaje con el error al validar el jwt                              
 */
 router.get('/photo' , validarJWT , getPhotoProfile  );
 
@@ -142,6 +147,7 @@ router.get('/photo' , validarJWT , getPhotoProfile  );
 *   patch:
 *       description: Este Enpoint te permite actualizar la imagen de un usuario , solo seran permitidas aquellas imagenes con extencion  png , jpg , jpeg , gif
 *       summary: actualizar foto de un usuario
+*       tags: [User] 
 *       parameters:
 *          - in: header
 *            name: x-token
@@ -398,7 +404,17 @@ router.post('/' ,[
 *                               default: false            
 *                           msg:
 *                               type: string
-*                               default: No ha sido posible eliminar el usuario  , por favor hable con el admistrador    
+*                               default: No ha sido posible eliminar el usuario  , por favor hable con el admistrador
+*           401:
+*              description: Error al validar el token de autenticación 
+*              content:
+*                  application/json: 
+*                      schema:
+*                          type: object
+*                          properties:
+*                              msg:
+*                                type: string
+*                                description: mensaje con el error al validar el jwt    
 */
 router.delete('/', [
     validarJWT,

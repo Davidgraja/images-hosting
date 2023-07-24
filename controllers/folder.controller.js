@@ -24,7 +24,7 @@ const getFolder =  async ( req = request , res = response ) => {
         }
 
         
-        const folder = await FolderModel.findById(id);
+        const folder = await FolderModel.findById(id).populate('usuario' , 'nombre correo');
 
         if(!folder){
             return res.status(404).json({
@@ -43,9 +43,18 @@ const getFolder =  async ( req = request , res = response ) => {
 
         const regex = new RegExp(nombre , 'i');
 
-        const folder = await FolderModel.find({nombre : regex , $and:[{ usuario:uid }]})
+        const folder = await FolderModel.findOne({nombre : regex , $and:[{ usuario:uid }]}).populate('usuario' , 'nombre correo')
         
-        return res.json(folder)
+        if(!folder){
+            return res.status(404).json({
+                ok : false,
+                msg : `No ha sido  encontrada la carpeta  con el nombre ${nombre}`
+            })
+        }
+        return res.json({
+            ok: true,
+            folder
+        })
     }
 
     res.status(400).json({
@@ -61,7 +70,7 @@ const getFolders = async ( req = request , res = response ) => {
 
     try {
 
-        const folders = await FolderModel.find({usuario : uid})
+        const folders = await FolderModel.find({usuario : uid}).populate('usuario' , 'nombre correo')
 
         res.json({
             ok : true,
@@ -79,6 +88,7 @@ const getFolders = async ( req = request , res = response ) => {
 
 
 }
+
 
 const createFolder = async ( req = request , res = response ) => {
 
@@ -108,6 +118,8 @@ const createFolder = async ( req = request , res = response ) => {
     
         await newFolder.save();
 
+        await newFolder.populate('usuario' , 'nombre correo')
+       
         const folderPath = path.join(__dirname , '../uploads' , uid.toString() , folderName);
         
         fs.mkdirSync(folderPath);
@@ -115,7 +127,7 @@ const createFolder = async ( req = request , res = response ) => {
         res.json({
             ok : true,
             msg : 'Carpeta creada con exito',
-            information : newFolder 
+            folder : newFolder 
         });
 
     } catch (e) {
