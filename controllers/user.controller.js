@@ -227,7 +227,7 @@ const updatePhotoProfile  = async ( req = request , res = response ) => {
     
 
     if (!req.files || Object.keys(req.files).length === 0 || !req.files.file) {
-        return res.status(400).json({
+        return res.status(404).json({
             ok : false ,
             msg : 'No hay archivos que subir'
         });

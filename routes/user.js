@@ -198,20 +198,7 @@ router.get('/photo' , validarJWT , getPhotoProfile  );
 *                               type: string
 *                               default: imagen actualizada
 *           404:
-*              description: No se encontro la imagen , no hay imagen por eliminar 
-*              content:
-*                  application/json: 
-*                      schema:
-*                        type: object
-*                        properties:
-*                            ok:
-*                               type: boolean
-*                               default : false    
-*                            msg:
-*                               type: string
-*                               default: no hay imagen para eliminar
-*           400:
-*              description: No se envio la imagen para asignarsela al usuario
+*              description: No se envio la imagen para asignarsela al usuario o en el caso de eliminación no se encontro la imagen
 *              content:
 *                  application/json: 
 *                      schema:
@@ -279,7 +266,7 @@ router.patch('/image' , [
 *                               type: object
 *                               $ref: '#/components/schemas/User'
 *            400:
-*             description: Error en uno de los campos enviados 
+*             description: Error en el envio de los campos enviados 
 *             content:
 *               application/json:
 *                   schema:
