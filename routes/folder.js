@@ -168,7 +168,7 @@ router.get('/search' ,[
  *                                  default : false
  *                              msg:
  *                                  type: string
- *                                  default: A ocurrido un error , intentelo de nuevo o comuniquese con el administrador
+ *                                  default: Ha ocurrido un error , intentelo de nuevo o hable con el administrador
  */
 router.get('/' , validarJWT , getFolders )
 
@@ -244,7 +244,7 @@ router.get('/' , validarJWT , getFolders )
  *                                  default : false
  *                              msg:
  *                                  type: string
- *                                  default: A ocurrido un error , intentelo de nuevo o comuniquese con el administrador
+ *                                  default: Ha ocurrido un error , intentelo de nuevo o hable con el administrador
  */
 router.post('/' ,[
     validarJWT,
@@ -344,7 +344,7 @@ router.post('/' ,[
  *                                  default : false
  *                              msg:
  *                                  type: string
- *                                  default: A ocurrido un error , intentelo de nuevo o comuniquese con el administrador
+ *                                  default: Ha ocurrido un error , intentelo de nuevo o hable con el administrador
  */
 router.patch('/:id' , [
     validarJWT,
@@ -435,7 +435,7 @@ router.patch('/:id' , [
  *                                  default : false
  *                              msg:
  *                                  type: string
- *                                  default: A ocurrido un error , intentelo de nuevo o comuniquese con el administrador
+ *                                  default: Ha ocurrido un error , intentelo de nuevo o hable con el administrador
  */
 router.delete('/:id' , [
     validarJWT,

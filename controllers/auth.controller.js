@@ -48,7 +48,7 @@ const login = async (req = request , res = response) => {
 
         return res.status(500).json({
             ok : false , 
-            msg : 'Por favor comuniquese con el administrador'
+            msg : 'Ha ocurrido un error , intentelo de nuevo o hable con el administrador'
         });
 
     }
@@ -68,7 +68,10 @@ const renewToken = async ( req = request , res = response ) =>{
         })
     } catch (error) {
         console.log(error)
-        res.status(500).json(error)
+        res.status(500).json({
+            ok: false,
+            msg: 'Ha ocurrido un error , intentelo de nuevo o hable con el administrador'
+        })
     }
 }
 

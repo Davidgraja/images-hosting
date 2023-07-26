@@ -184,7 +184,7 @@ const usuariosDelete = async (req = request, res = response ) => {
         return res.status(500).json({
             
             ok : false ,
-            msg : 'No ha sido posible eliminar el usuario  , por favor hable con el admistrador'
+            msg : 'Ha ocurrido un error , intentelo de nuevo o hable con el administrador'
         })
     }   
 

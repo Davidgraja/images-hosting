@@ -196,7 +196,7 @@ router.get('/:folderId/:fileName', [
  *                               default : false    
  *                            msg:
  *                               type: string
- *                               default: no ha sido posible eliminar el archivo  , por favor hable con el administrador           
+ *                               default: ha ocurrido un error , intentelo de nuevo o hable con el administradorrador           
  */
 router.post('/:id' ,[ 
     validarJWT ,
@@ -206,7 +206,106 @@ router.post('/:id' ,[
     validateFolder
 ], uploadFiles);
 
-
+/**
+ * @swagger
+ * /api/images/{folderId}/{fileName}: 
+ *  put:
+ *      description: En este enpoint puedes actualizar una imagen  cambiandola por otra 
+ *      summary: Actualizar una imagen asociada a una carpeta 
+ *      parameters:
+ *          - in: header
+ *            name: x-token
+ *            schema:
+ *                type: string
+ *            required: true
+ *            description: token de autenticación del usuario entregado al hacer login o crear un usuario
+ *          
+ *          - in: path
+ *            name: folderId
+ *            schema:
+ *                type: string
+ *            required: true
+ *            description: identificador de la carpeta
+ * 
+ *          - in: path
+ *            name: fileName
+ *            schema:
+ *                type: string
+ *            required: true
+ *            description: El nombre de la imagen
+ *      tags: [Images]
+ *      responses:
+ *           200: 
+ *              description: ok, imagen actualizada correctamente 
+ *              content:
+ *                  application/json: 
+ *                      schema:
+ *                        type: object
+ *                        properties:
+ *                            ok:
+ *                               type: boolean
+ *                               default: true
+ *                            msg:
+ *                               type: string
+ *                               default: imagen actualizada
+ *           401:
+ *              description: Error al validar el token de autenticación 
+ *              content:
+ *                  application/json: 
+ *                      schema:
+ *                        type: object
+ *                        properties:
+ *                            msg:
+ *                               type: string
+ *                               description: mensaje con el error al validar el jwt
+ *           404:
+ *              description: No se encontro la carpeta  o imagen para subir al servidor 
+ *              content:
+ *                  application/json: 
+ *                      schema:
+ *                         type: object
+ *                         properties:
+ *                            ok:
+ *                               type: boolean
+ *                               default : false    
+ *                            msg:
+ *                               type: string
+ *                               descriptio: motivo del error
+ *           400:
+ *              description: se realizo una solicitud incorrecta
+ *              content:
+ *                application/json:
+ *                   schema:
+ *                       type: array
+ *                       items:
+ *                          type: object
+ *                          properties:
+ *                                  value:
+ *                                      type: string
+ *                                      description: El valor enviado
+ *                                  msg: 
+ *                                      type: string
+ *                                      description: mensaje que te explica el error 
+ *                                  param:
+ *                                      type: string
+ *                                      description: El parametro o propiedad que tiene el error
+ *                                  location:
+ *                                      type: string
+ *                                      description: locación dentro de la request donde se obtuvo el error 
+ *           500:
+ *              description: Error al procesar la petición en el servidor
+ *              content:
+ *                  application/json: 
+ *                      schema:
+ *                        type: object
+ *                        properties:
+ *                            ok:
+ *                               type: boolean
+ *                               default : false    
+ *                            msg:
+ *                               type: string
+ *                               default: no ha sido posible eliminar el archivo  , por favor hable con el administrador           
+ */
 router.put('/:folderId/:fileName' , [
     validarJWT,
     check( 'folderId' , 'Id no valido' ).isMongoId(),
@@ -215,6 +314,106 @@ router.put('/:folderId/:fileName' , [
     validarArchivos
 ] , updateFile )
 
+/**
+ * @swagger
+ * /api/images/{folderId}/{fileName}: 
+ *  delete:
+ *      description: En este enpoint puedes eliminar una imagen asociada a una carpeta
+ *      summary: Eliminar una imagen asociada a una carpeta 
+ *      parameters:
+ *          - in: header
+ *            name: x-token
+ *            schema:
+ *                type: string
+ *            required: true
+ *            description: token de autenticación del usuario entregado al hacer login o crear un usuario
+ *          
+ *          - in: path
+ *            name: folderId
+ *            schema:
+ *                type: string
+ *            required: true
+ *            description: identificador de la carpeta
+ * 
+ *          - in: path
+ *            name: fileName
+ *            schema:
+ *                type: string
+ *            required: true
+ *            description: El nombre de la imagen
+ *      tags: [Images]
+ *      responses:
+ *           200: 
+ *              description: ok, imagen actualizada correctamente 
+ *              content:
+ *                  application/json: 
+ *                      schema:
+ *                        type: object
+ *                        properties:
+ *                            ok:
+ *                               type: boolean
+ *                               default: true
+ *                            msg:
+ *                               type: string
+ *                               default: Archivo eliminado
+ *           401:
+ *              description: Error al validar el token de autenticación 
+ *              content:
+ *                  application/json: 
+ *                      schema:
+ *                        type: object
+ *                        properties:
+ *                            msg:
+ *                               type: string
+ *                               description: mensaje con el error al validar el jwt
+ *           404:
+ *              description: No se encontro la carpeta  o imagen dentro   
+ *              content:
+ *                  application/json: 
+ *                      schema:
+ *                         type: object
+ *                         properties:
+ *                            ok:
+ *                               type: boolean
+ *                               default : false    
+ *                            msg:
+ *                               type: string
+ *                               descriptio: motivo del error
+ *           400:
+ *              description: se realizo una solicitud incorrecta
+ *              content:
+ *                application/json:
+ *                   schema:
+ *                       type: array
+ *                       items:
+ *                          type: object
+ *                          properties:
+ *                                  value:
+ *                                      type: string
+ *                                      description: El valor enviado
+ *                                  msg: 
+ *                                      type: string
+ *                                      description: mensaje que te explica el error 
+ *                                  param:
+ *                                      type: string
+ *                                      description: El parametro o propiedad que tiene el error
+ *                                  location:
+ *                                      type: string
+ *                                      description: locación dentro de la request donde se obtuvo el error 
+ *           500:
+ *              description: Error al procesar la petición en el servidor
+ *              content:
+ *                  application/json: 
+ *                      schema:
+ *                        type: object
+ *                        properties:
+ *                            ok:
+ *                               type: boolean
+ *                               default : false    
+ *                            msg:
+ *                               type: string
+ *                               default: no ha sido posible eliminar el archivo  , por favor hable con el administrador           
+ */
 router.delete('/:folderId/:fileName', [
     validarJWT ,
     check( 'folderId' , 'Id no valido' ).isMongoId(),

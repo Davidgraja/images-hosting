@@ -82,7 +82,7 @@ const getFolders = async ( req = request , res = response ) => {
         console.log(e);
         res.status(500).json({
             ok : false ,
-            msg : 'A ocurrido un error , intentelo de nuevo o comuniquese con el administrador'
+            msg : 'Ha ocurrido un error , intentelo de nuevo o hable con el administrador'
         })
     }
 
@@ -134,7 +134,7 @@ const createFolder = async ( req = request , res = response ) => {
         console.log(e);
         return res.status(500).json({
             ok : false,
-            msg : 'A ocurrido un error , intentelo de nuevo o comuniquese con el administrador'
+            msg : 'Ha ocurrido un error , intentelo de nuevo o hable con el administrador'
         });
     }
 
@@ -177,7 +177,7 @@ const updateFolder = async ( req = request , res = response ) => {
             console.log(error);
             return res.status(500).json({
                 ok : false,
-                msg : 'A ocurrido un error , intentelo de nuevo o comuniquese con el administrador'
+                msg : 'Ha ocurrido un error , intentelo de nuevo o hable con el administrador'
             })
         }
 
@@ -218,7 +218,7 @@ const deleteFolder = async ( req = request , res = response ) => {
         
         return res.status(500).json({
             ok: false,
-            msg : 'ha ocurrido un error , intentelo de nuevo o hable con el administrador'
+            msg : 'Ha ocurrido un error , intentelo de nuevo o hable con el administrador'
         })
     }
 
