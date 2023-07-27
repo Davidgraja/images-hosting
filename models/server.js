@@ -18,7 +18,6 @@ class Server {
         this.folderPath = '/api/folders';
         this.imagesPath = '/api/images';
         this.documentationPath = '/';
-        this.CSS_URL = 'https://cdn.jsdelivr.net/npm/s wagger-ui-themes@3.0.0 / themes/3.x/theme-newspaper.css'
 
         // conección de la base de datos 
         this.conectarDB();
@@ -57,7 +56,7 @@ class Server {
         this.app.use( this.usuarioPath , require('../routes/user'));
         this.app.use( this.folderPath , require('../routes/folder'));
         this.app.use( this.imagesPath , require('../routes/images'));
-        this.app.use(this.documentationPath , swaggerUi.serve , swaggerUi.setup(swagerJsDoc(swaggerSpec) , { customCssUrl: this.CSS_URL }) )
+        this.app.use(this.documentationPath , swaggerUi.serve , swaggerUi.setup(swagerJsDoc(swaggerSpec)) )
     }
 
 
