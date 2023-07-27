@@ -18,7 +18,7 @@ class Server {
         this.folderPath = '/api/folders';
         this.imagesPath = '/api/images';
         this.documentationPath = '/';
-        this.CSS_URL = ' https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger-ui.min.css'
+        this.CSS_URL = 'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger-ui.min.css'
 
         // conección de la base de datos 
         this.conectarDB();
