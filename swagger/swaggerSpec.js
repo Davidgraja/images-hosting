@@ -15,6 +15,10 @@ const swaggerConfig = {
         servers : [
             {
                 url : "http://localhost:8080"
+            },
+            
+            {
+                url : "https://images-hosting.vercel.app/"
             }
         ] 
     },
