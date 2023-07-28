@@ -2,7 +2,7 @@ const path = require('path')
 
 const swaggerConfig = {
     definition :{
-        openapi : "3.0.0",
+        openapi : "3.1.0",
         info : {
             title : "Hosting de imagenes",
             version : "1.0.0",
@@ -14,7 +14,14 @@ const swaggerConfig = {
         },
         servers : [
             {
+<<<<<<< HEAD
                 url: "https://images-hosting.vercel.app"
+=======
+                url : "http://localhost:8080"
+            },
+            {
+                url : "https://images-hosting.vercel.app"
+>>>>>>> swagger
             }
         ] 
     },
