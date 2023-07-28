@@ -14,14 +14,10 @@ const swaggerConfig = {
         },
         servers : [
             {
-<<<<<<< HEAD
-                url: "https://images-hosting.vercel.app"
-=======
                 url : "http://localhost:8080"
             },
             {
                 url : "https://images-hosting.vercel.app"
->>>>>>> swagger
             }
         ] 
     },
