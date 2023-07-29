@@ -38,6 +38,8 @@ class Server {
 
         this.app.use(express.json())
 
+        this.app.use(express.static('public'))
+        
         /*Configuración de Cors*/
         this.app.use(cors());
 
@@ -56,7 +58,7 @@ class Server {
         this.app.use( this.usuarioPath , require('../routes/user'));
         this.app.use( this.folderPath , require('../routes/folder'));
         this.app.use( this.imagesPath , require('../routes/images'));
-        this.app.use(this.documentationPath , swaggerUi.serve , swaggerUi.setup(swagerJsDoc(swaggerSpec)) )
+        this.app.use('/', swaggerUi.serve , swaggerUi.setup(swagerJsDoc(swaggerSpec)) )
     }
 
 
