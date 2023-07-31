@@ -81,4 +81,4 @@ Con estos pasos ya deberías de tener tu servicio funcionando 😊
 - [rimraf](https://www.npmjs.com/package/rimraf)
 - [uuid](https://www.npmjs.com/package/uuid)
 ## Documentación: 
-El proyecto actualmente se encuentra desplegado en : https://images-hosting.vercel.app y puedes interactuar con su documentacion en la raiz del url , ademas puedes ver otra documentacion si asi lo deseas en [postman](https://documenter.getpostman.com/view/23520684/2s946h9sej) 
+El proyecto actualmente se encuentra desplegado  y puedes hacer peticiones a este en : https://images-hosting.vercel.app y puedes interactuar con su documentacion en la raiz del url , ademas puedes ver otra documentacion si asi lo deseas en [postman](https://documenter.getpostman.com/view/23520684/2s946h9sej) 
