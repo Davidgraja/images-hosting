@@ -78,10 +78,7 @@ Con estos pasos ya deberías de tener tu servicio funcionando 😊
 - [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken)
 - [express-fileupload](https://www.npmjs.com/package/express-fileupload)
 - [mongoose](https://mongoosejs.com/)
-- [Swagger](https://swagger.io/)
 - [rimraf](https://www.npmjs.com/package/rimraf)
 - [uuid](https://www.npmjs.com/package/uuid)
 ## Documentación: 
-El proyecto actualmente se encuentra desplegado en : y puedes interactuar con su documentacion en la raiz del url , ademas puedes ver otra documentacion si asi lo deseas en [postman](https://documenter.getpostman.com/view/23520684/2s946h9sej) 
-
-Algo que debo de añadir es de que la documentación internamente es generada e  implementada con [Swagger](https://swagger.io/)
+El proyecto actualmente se encuentra desplegado en : https://images-hosting.vercel.app y puedes interactuar con su documentacion en la raiz del url , ademas puedes ver otra documentacion si asi lo deseas en [postman](https://documenter.getpostman.com/view/23520684/2s946h9sej) 
