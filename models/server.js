@@ -7,7 +7,7 @@ const  fileUpload = require('express-fileupload');
 const swaggerUi = require('swagger-ui-express')
 const swagerJsDoc = require('swagger-jsdoc')
 const swaggerSpec = require('../swagger/swaggerSpec')
-
+const CSS_URL ="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger-ui.min.css";
 class Server {
 
     constructor() {
@@ -54,11 +54,11 @@ class Server {
 
     routes (){
 
-        this.app.use(this.authPath , require('../routes/auth'));
+        this.app.use( this.authPath , require('../routes/auth'));
         this.app.use( this.usuarioPath , require('../routes/user'));
         this.app.use( this.folderPath , require('../routes/folder'));
         this.app.use( this.imagesPath , require('../routes/images'));
-        this.app.use('/', swaggerUi.serve , swaggerUi.setup(swagerJsDoc(swaggerSpec)) )
+        this.app.use( this.documentationPath, swaggerUi.serve , swaggerUi.setup(swagerJsDoc(swaggerSpec ), { customCssUrl: CSS_URL}) )
     }
 
 
