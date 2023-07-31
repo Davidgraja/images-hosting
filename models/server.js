@@ -17,7 +17,7 @@ class Server {
         this.authPath = '/api/auth';
         this.folderPath = '/api/folders';
         this.imagesPath = '/api/images';
-        this.documentationPath = '/';
+        this.documentationPath = '/api-docs';
 
         // conección de la base de datos 
         this.conectarDB();
